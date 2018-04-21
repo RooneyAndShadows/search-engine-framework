@@ -6,4 +6,4 @@ class IRepository:
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def finish_job(self, job_id: UUID, crawler_id: UUID): raise NotImplementedError
+    def finish_job(self, job_id: UUID, crawler_id: UUID) -> None: raise NotImplementedError
