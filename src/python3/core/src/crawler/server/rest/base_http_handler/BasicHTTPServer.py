@@ -12,7 +12,7 @@ class BasicHTTPServer(IRestServer):
 
     def run(self, host: str = '127.0.0.1', port: int = 8888, debug: bool = False) -> None:
         server = HTTPServerWrapper((host, port), HTTPHandler, self.context)
-        print('Started HTTP Server on host ', host, ':', port)
+        print('Started http Server on host ', host, ':', port)
         try:
             server.serve_forever()
         except KeyboardInterrupt:

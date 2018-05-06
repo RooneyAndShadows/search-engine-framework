@@ -1,4 +1,9 @@
+import jsonpickle
+from jsonpickle import handlers
+
+from interfaces.src.base.serialize.JobTypeHandler import JobTypeHandler
 from interfaces.src.crawler.communication.response.Error import Error
+from interfaces.src.crawler.enum.JobType import JobType
 
 
 class BaseResponse(object):
@@ -11,3 +16,9 @@ class BaseResponse(object):
 
     def has_error(self) -> bool:
         return self.error is not None
+
+    def serialize(self):
+        handlers.register(JobType, JobTypeHandler)
+        response = jsonpickle.encode(self, False)
+        handlers.unregister(JobType)
+        return response
