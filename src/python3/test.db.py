@@ -2,10 +2,10 @@ import pprint
 import uuid
 from uuid import UUID
 
-from core.src.crawler.server.data.mongodb.SearchEngineContext import SearchEngineContext as MongoContext
-from core.src.crawler.server.data.sqlalchemy.SearchEngineContext import SearchEngineContext as SQLAlchemyContext
-from interfaces.src.crawler.enum.JobType import JobType
-from interfaces.src.crawler.server.data.data.JobData import JobData
+from easy_search.core.crawler.server.data.mongodb.SearchEngineContext import SearchEngineContext as MongoContext
+from easy_search.core.crawler.server.data.sqlalchemy.SearchEngineContext import SearchEngineContext as SQLAlchemyContext
+from easy_search.interfaces.crawler.enum.JobType import JobType
+from easy_search.interfaces.crawler.server.data.data.JobData import JobData
 
 #with SQLAlchemyContext("postgresql+psycopg2://postgres:_mk123_@localhost:5432/crawler_test") as context:
 with MongoContext("mongodb://192.168.163.129", "crawler_test") as context:

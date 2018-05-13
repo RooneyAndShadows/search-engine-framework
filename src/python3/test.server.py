@@ -1,10 +1,10 @@
-from core.src.crawler.server.data.mongodb.SearchEngineContext import SearchEngineContext
-from core.src.crawler.server.manager.document.elasticsearch.ElasticDocumentManager import ElasticDocumentManager
-from core.src.crawler.server.manager.document.solr.SOLRDocumentManager import SOLRDocumentManager
-from core.src.crawler.server.rest.base_http_handler.BasicHTTPServer import BasicHTTPServer
-from core.src.crawler.server.rest.flask.FlaskServer import FlaskServer
-from core.src.crawler.server.rest.pyramid.PyramidServer import PyramidServer
-from interfaces.src.crawler.index.IndexDocument import IndexDocument
+from easy_search.core.crawler.server.data.mongodb.SearchEngineContext import SearchEngineContext
+from easy_search.core.crawler.server.manager.document.elasticsearch.ElasticDocumentManager import ElasticDocumentManager
+from easy_search.core.crawler.server.manager.document.solr.SOLRDocumentManager import SOLRDocumentManager
+from easy_search.core.crawler.server.rest.base_http_handler.BasicHTTPServer import BasicHTTPServer
+from easy_search.core.crawler.server.rest.flask.FlaskServer import FlaskServer
+from easy_search.core.crawler.server.rest.pyramid.PyramidServer import PyramidServer
+from easy_search.interfaces.crawler.index.IndexDocument import IndexDocument
 
 context = SearchEngineContext("mongodb://192.168.163.129", "crawler_test")
 #document_manager = ElasticDocumentManager(context, '192.168.163.129:9200', 'test')
