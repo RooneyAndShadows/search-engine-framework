@@ -1,21 +1,18 @@
 import datetime
-import hashlib
 import uuid
 from uuid import UUID
 
 from sqlalchemy import asc
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from core.src.crawler.server.data.sqlalchemy.entity.Job import Job
 from core.src.crawler.server.data.sqlalchemy.set.base.BaseSet import BaseSet
-from core.src.crawler.server.dependency.service import hash_generator
+from core.src.crawler.dependency.service import hash_generator
 from interfaces.src.crawler.enum.JobType import JobType
 from interfaces.src.crawler.server.data.data.JobData import JobData
 from interfaces.src.crawler.server.data.entity.Job import Job as JobDTO
 from interfaces.src.crawler.server.data.exception.DataAccessException import DataAccessException
 from interfaces.src.crawler.server.data.exception.EntityNotFoundException import EntityNotFoundException
-from interfaces.src.crawler.server.data.exception.UniqueConstraintFailedException import UniqueConstraintFailedException
 from interfaces.src.crawler.server.data.set.IJobSet import IJobSet
 
 

@@ -1,12 +1,19 @@
 from core.src.crawler.server.data.mongodb.SearchEngineContext import SearchEngineContext
+from core.src.crawler.server.manager.document.elasticsearch.ElasticDocumentManager import ElasticDocumentManager
+from core.src.crawler.server.manager.document.solr.SOLRDocumentManager import SOLRDocumentManager
 from core.src.crawler.server.rest.base_http_handler.BasicHTTPServer import BasicHTTPServer
 from core.src.crawler.server.rest.flask.FlaskServer import FlaskServer
 from core.src.crawler.server.rest.pyramid.PyramidServer import PyramidServer
+from interfaces.src.crawler.index.IndexDocument import IndexDocument
 
 context = SearchEngineContext("mongodb://192.168.163.129", "crawler_test")
-#server = FlaskServer(__name__, context)
-#server = PyramidServer(context)
-server = BasicHTTPServer(context)
+#document_manager = ElasticDocumentManager(context, '192.168.163.129:9200', 'test')
+document_manager = SOLRDocumentManager(context, 'http://192.168.163.129:8983/solr', 'test')
+
+
+server = FlaskServer(__name__, IndexDocument, context, document_manager)
+#server = PyramidServer(IndexDocument, context, document_manager)
+#server = BasicHTTPServer(IndexDocument, context, document_manager)
 
 if __name__ == '__main__':
     server.run(debug=True)

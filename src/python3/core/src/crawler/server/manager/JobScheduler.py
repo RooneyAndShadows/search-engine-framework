@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from uuid import UUID
 
-from core.src.crawler.server.dependency.service import hash_generator
+from core.src.crawler.dependency.service import hash_generator
 from core.src.crawler.server.manager.base.BaseManager import BaseManager
 from interfaces.src.base.exception.BasicException import BasicException
 from interfaces.src.crawler.communication.common.JobDescription import JobDescription

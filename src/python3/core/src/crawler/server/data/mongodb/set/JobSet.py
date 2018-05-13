@@ -6,7 +6,7 @@ import pymongo
 from pymongo.collection import Collection
 
 from core.src.crawler.server.data.mongodb.set.base.BaseSet import BaseSet
-from core.src.crawler.server.dependency.service import hash_generator
+from core.src.crawler.dependency.service import hash_generator
 from interfaces.src.crawler.enum.JobType import JobType
 from interfaces.src.crawler.server.data.data.JobData import JobData
 from interfaces.src.crawler.server.data.entity.Job import Job as JobDTO
@@ -65,29 +65,38 @@ class JobSet(BaseSet, IJobSet):
     def get(self, job_id: UUID) -> JobDTO:
         try:
             entity = self.get_collection().find_one({"job_id": job_id.__str__()})
-            if entity is None:
-                raise EntityNotFoundException("Job with id not found!")
+        except Exception as e:
+            raise DataAccessException("Failed get job from database!", e)
+        if entity is None:
+            raise EntityNotFoundException("Job with hash not found!")
+        try:
             return self.convert(entity)
         except Exception as e:
-            raise DataAccessException("Failed to get job from database!", e)
+            raise DataAccessException("Failed convert job from database!", e)
 
     def get_by_hash(self, unique_hash: str) -> JobDTO:
         try:
             entity = self.get_collection().find_one({"hash": unique_hash})
-            if entity is None:
-                raise EntityNotFoundException("Job with hash not found!")
+        except Exception as e:
+            raise DataAccessException("Failed get job from database!", e)
+        if entity is None:
+            raise EntityNotFoundException("Job with hash not found!")
+        try:
             return self.convert(entity)
         except Exception as e:
-            raise DataAccessException("Failed get job from in database!", e)
+            raise DataAccessException("Failed convert job from database!", e)
 
     def get_next_free(self) -> JobDTO:
         try:
             entity = self.get_collection().find_one({"locked": False}, sort=[("date_added", pymongo.ASCENDING)])
-            if entity is None:
-                raise EntityNotFoundException("No free job is found!")
+        except Exception as e:
+            raise DataAccessException("Failed get job from database!", e)
+        if entity is None:
+            raise EntityNotFoundException("No free jobs found!")
+        try:
             return self.convert(entity)
         except Exception as e:
-            raise DataAccessException("Failed to get job from database!", e)
+            raise DataAccessException("Failed convert job from database!", e)
 
     def lock(self, job_id: UUID) -> None:
         try:

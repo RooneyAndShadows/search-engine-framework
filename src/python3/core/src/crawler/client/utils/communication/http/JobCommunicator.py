@@ -5,7 +5,7 @@ from jsonpickle import handlers
 
 from core.src.crawler.client.utils.communication.exception.FailedRequestException import FailedRequestException
 from core.src.crawler.client.utils.communication.http.BaseCommunicator import BaseCommunicator
-from interfaces.src.base.serialize.JobTypeHandler import JobTypeHandler
+from core.src.crawler.serialize.JobTypeHandler import JobTypeHandler
 from interfaces.src.crawler.client.utils.IJobCommunicator import IJobCommunicator
 from interfaces.src.crawler.communication.common.JobDescription import JobDescription
 from interfaces.src.crawler.communication.request.JobResult import JobResult

@@ -4,6 +4,6 @@ from interfaces.src.crawler.communication.response.BaseResponse import BaseRespo
 
 class JobInformation(BaseResponse):
     def __init__(self, job_desc: JobDescription = None):
-        result = JobDescription is not None
+        result = job_desc is not None
         super().__init__(result)
         self.job_desc = job_desc
