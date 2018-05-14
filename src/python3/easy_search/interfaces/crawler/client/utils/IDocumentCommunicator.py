@@ -1,10 +1,10 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod, ABCMeta
 
 from ...index.IndexDocument import IndexDocument
 
 
-class IDocumentCommunicator(object):
-    __metaclass__ = ABC
+class IDocumentCommunicator:
+    __metaclass__ = ABCMeta
 
     @abstractmethod
     def add_document(self, document: IndexDocument) -> None: raise NotImplementedError

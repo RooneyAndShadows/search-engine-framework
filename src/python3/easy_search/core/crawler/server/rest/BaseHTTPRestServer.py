@@ -50,10 +50,10 @@ class BaseHTTPRestServer(BaseServer, IRestServer):
             return "Job id is not provided!", self.BAD_REQUEST
         job_id_string = request["job_id"]
         try:
-            job_id = UUID(job_id_string, version=4)
+            UUID(job_id_string, version=4)
         except Exception:
             return "Job id is not valid!", self.BAD_REQUEST
-        job_result = JobResult(job_id, [])
+        job_result = self.serializer.deserialize(request, JobResult)
         response = self.job_scheduler.finish_job(crawler_id, job_result)
         return self.manage_response(response)
 

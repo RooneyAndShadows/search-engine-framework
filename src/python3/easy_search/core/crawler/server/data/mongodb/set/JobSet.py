@@ -68,7 +68,7 @@ class JobSet(BaseSet, IJobSet):
         except Exception as e:
             raise DataAccessException("Failed get job from database!", e)
         if entity is None:
-            raise EntityNotFoundException("Job with hash not found!")
+            raise EntityNotFoundException("Job with id not found!")
         try:
             return self.convert(entity)
         except Exception as e:
