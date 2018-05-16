@@ -7,6 +7,7 @@ CREATE TABLE jobs (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     type integer NOT NULL,
     url text NOT NULL,
+    plugin text NOT NULL,
     hash text NOT NULL,
     locked boolean DEFAULT false NOT NULL,
     date_added timestamp without time zone DEFAULT now() NOT NULL,

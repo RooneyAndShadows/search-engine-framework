@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from typing import List
 from uuid import UUID
 
 from ..data.JobData import JobData
@@ -25,6 +26,9 @@ class IJobSet:
 
     @abstractmethod
     def get_next_free(self) -> Job: raise NotImplementedError
+
+    @abstractmethod
+    def get_next_free_in_plugin_list(self, plugin_list: List[str]) -> Job: raise NotImplementedError
 
     @abstractmethod
     def lock(self, job_id: UUID) -> None: raise NotImplementedError

@@ -1,8 +1,9 @@
 import datetime
 import uuid
+from typing import List
 from uuid import UUID
 
-from sqlalchemy import asc
+from sqlalchemy import asc, and_
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from ..entity.Job import Job
@@ -17,9 +18,10 @@ from easy_search.interfaces.crawler.server.data.set.IJobSet import IJobSet
 
 
 class JobSet(BaseSet, IJobSet):
+
     def convert(self, entity: Job) -> JobDTO:
         job = JobDTO(entity.id, JobType(entity.type), entity.url, entity.hash, entity.locked,
-                     entity.date_added, entity.crawler_id)
+                     entity.date_added, entity.crawler_id, entity.plugin)
         if entity.done_by is not None:
             job.set_executor_crawler_id(entity.done_by, entity.date_done)
         return job
@@ -31,6 +33,7 @@ class JobSet(BaseSet, IJobSet):
         job.locked = data.locked
         job.hash = hash_generator().generate_target_hash(data.target)
         job.url = data.target
+        job.plugin = data.plugin_type
         job.type = data.type.value
 
     def add(self, job: JobData) -> UUID:
@@ -109,6 +112,19 @@ class JobSet(BaseSet, IJobSet):
             entity = query \
                 .order_by(asc(Job.date_added)) \
                 .filter(Job.locked == False) \
+                .first()
+            return self.convert(entity)
+        except NoResultFound as e:
+            raise EntityNotFoundException("Job was not found in database!", e)
+        except Exception as e:
+            raise DataAccessException("Failed to edit job in database!", e)
+
+    def get_next_free_in_plugin_list(self, plugin_list: List[str]) -> Job:
+        try:
+            query = self.session.query(Job)
+            entity = query \
+                .order_by(asc(Job.date_added)) \
+                .filter(and_(Job.locked == False, Job.plugin in plugin_list)) \
                 .first()
             return self.convert(entity)
         except NoResultFound as e:

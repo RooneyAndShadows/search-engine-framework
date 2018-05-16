@@ -6,10 +6,11 @@ from ....enum.JobType import JobType
 
 class Job(object):
     def __init__(self, job_id: UUID, job_type: JobType, target: str, unique_hash: str, locked: bool,
-                 date_added: datetime, creator_crawler_id: UUID):
+                 date_added: datetime, creator_crawler_id: UUID, plugin: str):
         self.job_id = job_id
         self.type = job_type
         self.target = target
+        self.plugin_type = plugin
         self.hash = unique_hash
         self.locked = locked
         self.date_added = date_added

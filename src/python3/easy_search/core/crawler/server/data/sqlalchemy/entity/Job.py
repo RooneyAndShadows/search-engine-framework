@@ -14,6 +14,7 @@ class Job(Base):
     id = Column(GUID, primary_key=True, default=uuid.uuid4)
     type = Column(Integer, nullable=False)
     url = Column(String, nullable=False)
+    plugin = Column(String, nullable=False)
     hash = Column(String, nullable=False)
     locked = Column(Boolean, nullable=False)
     crawler_id = Column(GUID, nullable=False)

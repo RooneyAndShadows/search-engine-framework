@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
+from typing import List
 from uuid import UUID
 
+from easy_search.interfaces.crawler.communication.common.ExtendedJobDescription import ExtendedJobDescription
 from ...dependency.service import hash_generator
 from .base.BaseManager import BaseManager
 from easy_search.interfaces.base.exception.BasicException import BasicException
-from easy_search.interfaces.crawler.communication.common.JobDescription import JobDescription
 from easy_search.interfaces.crawler.communication.request.JobResult import JobResult
 from easy_search.interfaces.crawler.communication.response.BaseResponse import BaseResponse
 from easy_search.interfaces.crawler.communication.response.Error import Error
@@ -15,13 +16,13 @@ from easy_search.interfaces.crawler.server.manager.IJobScheduler import IJobSche
 
 
 class JobScheduler(BaseManager, IJobScheduler):
-    def get_next_job(self, crawler_id: UUID) -> JobInformation:
+    def get_next_job(self, crawler_id: UUID, available_plugins: List[str]) -> JobInformation:
         response = JobInformation()
         self.context.start_transaction()
         try:
             self.context.crawler_set().register_call(crawler_id)
             try:
-                job = self.context.job_set().get_next_free()
+                job = self.context.job_set().get_next_free_in_plugin_list(available_plugins)
             except EntityNotFoundException:
                 self.context.save()
                 self.context.commit()
@@ -30,7 +31,7 @@ class JobScheduler(BaseManager, IJobScheduler):
             self.context.job_set().lock(job.job_id)
             self.context.save()
             self.context.commit()
-            response = JobInformation(JobDescription(job.type, job.target))
+            response = JobInformation(ExtendedJobDescription(job.job_id, job.type, job.target, job.plugin_type))
         except EntityNotFoundException as e:
             self.context.rollback()
             response.set_error(Error('ObjectNotFound', 404, e.message))
@@ -57,7 +58,7 @@ class JobScheduler(BaseManager, IJobScheduler):
                     if expire_date < datetime.now() and existing_job.locked:
                         self.context.job_set().unlock(existing_job.job_id)
                 except EntityNotFoundException:
-                    new_job = JobData(job.job_type, job.target, False, crawler_id)
+                    new_job = JobData(job.job_type, job.target, False, crawler_id, job.plugin_type)
                     self.context.job_set().add(new_job)
             self.context.save()
             self.context.commit()

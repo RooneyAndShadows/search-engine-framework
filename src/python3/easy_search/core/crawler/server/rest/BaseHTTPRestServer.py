@@ -61,7 +61,8 @@ class BaseHTTPRestServer(BaseServer, IRestServer):
         crawler_id = self.authenticate(headers)
         if crawler_id is None:
             return "", self.FORBIDDEN
-        response = self.job_scheduler.get_next_job(crawler_id)
+        plugins = headers.get("ACCEPT_PLUGINS", [])
+        response = self.job_scheduler.get_next_job(crawler_id, plugins.split(","))
         return self.manage_response(response)
 
     def add_document(self, headers: dict, request: dict):
