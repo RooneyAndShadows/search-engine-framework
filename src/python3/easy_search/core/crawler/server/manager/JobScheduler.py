@@ -72,5 +72,5 @@ class JobScheduler(BaseManager, IJobScheduler):
             response.set_error(Error("InternalServerError", 500, e.message))
         except Exception as e:
             self.context.rollback()
-            response.set_error(Error("InternalServerError", 500, 'Unknown error occurred!'))
+            response.set_error(Error("InternalServerError", 500, e.__str__()))
         return response

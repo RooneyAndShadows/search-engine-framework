@@ -7,8 +7,8 @@ from easy_search.core.crawler.server.rest.pyramid.PyramidServer import PyramidSe
 from easy_search.interfaces.crawler.index.IndexDocument import IndexDocument
 
 context = SearchEngineContext("mongodb://192.168.163.129", "crawler_test")
-#document_manager = ElasticDocumentManager(context, '192.168.163.129:9200', 'test')
-document_manager = SOLRDocumentManager(context, 'http://192.168.163.129:8983/solr', 'test')
+document_manager = ElasticDocumentManager(context, '192.168.163.129:9200', 'test')
+#document_manager = SOLRDocumentManager(context, 'http://192.168.163.129:8983/solr', 'test')
 
 
 server = FlaskServer(__name__, IndexDocument, context, document_manager)

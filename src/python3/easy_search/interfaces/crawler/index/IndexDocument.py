@@ -1,7 +1,7 @@
 from abc import ABC
 
 
-class IndexDocument(object):
+class IndexDocument:
     __metaclass__ = ABC
 
     def __init__(self, unique_id: str) -> None:
