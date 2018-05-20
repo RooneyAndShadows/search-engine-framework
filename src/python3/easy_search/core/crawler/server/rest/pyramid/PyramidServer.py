@@ -54,7 +54,10 @@ class PyramidServer(BaseHTTPRestServer):
         response, code = self.delete_document(request.headers, request.matchdict['id'])
         return Response(response, code)
 
-    def run(self, host: str = '127.0.0.1', port: int = 8888, debug: bool = False) -> None:
+    def run_dev(self, host: str = '127.0.0.1', port: int = 8888, debug: bool = False) -> None:
         self._server = make_server(host, port, self._application)
         print("Starting server on %s port: %s" % (host, port))
         self._server.serve_forever()
+
+    def get_wsgi_application(self):
+        return self._application

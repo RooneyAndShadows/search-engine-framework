@@ -10,7 +10,7 @@ from easy_search.interfaces.crawler.server.rest.IRestServer import IRestServer
 
 class BaseHTTPRestServer(BaseServer, IRestServer):
     @abstractmethod
-    def run(self, host: str = '127.0.0.1', port: int = 8888, debug: bool = False) -> None:
+    def run_dev(self, host: str = '127.0.0.1', port: int = 8888, debug: bool = False) -> None:
         raise NotImplementedError
 
     __metaclass__ = ABCMeta
@@ -45,7 +45,7 @@ class BaseHTTPRestServer(BaseServer, IRestServer):
     def register_job(self, headers: dict, request: dict) -> Tuple[str, int]:
         crawler_id = self.authenticate(headers)
         if crawler_id is None:
-            return "", self.FORBIDDEN
+            return "Token not provided!", self.FORBIDDEN
         if "job_id" not in request:
             return "Job id is not provided!", self.BAD_REQUEST
         job_id_string = request["job_id"]
@@ -60,15 +60,17 @@ class BaseHTTPRestServer(BaseServer, IRestServer):
     def get_next_free(self, headers: dict):
         crawler_id = self.authenticate(headers)
         if crawler_id is None:
-            return "", self.FORBIDDEN
-        plugins = headers.get("ACCEPT_PLUGINS", [])
+            return "Token not provided!", self.FORBIDDEN
+        plugins = headers.get("ACCEPT_PLUGINS", "")
+        if plugins == "":
+            return "Plugin list not provided!", self.BAD_REQUEST
         response = self.job_scheduler.get_next_job(crawler_id, plugins.split(","))
         return self.manage_response(response)
 
     def add_document(self, headers: dict, request: dict):
         crawler_id = self.authenticate(headers)
         if crawler_id is None:
-            return "", self.FORBIDDEN
+            return "Token not provided!",  self.FORBIDDEN
         if "unique_id" not in request:
             return "Document id is not provided!", self.BAD_REQUEST
         document = self.serializer.deserialize(request, self.index_type)
@@ -78,6 +80,6 @@ class BaseHTTPRestServer(BaseServer, IRestServer):
     def delete_document(self, headers: dict, doc_id: str):
         crawler_id = self.authenticate(headers)
         if crawler_id is None:
-            return "", self.FORBIDDEN
+            return "Token not provided!",  self.FORBIDDEN
         response = self.documents.delete(doc_id)
         return self.manage_response(response)

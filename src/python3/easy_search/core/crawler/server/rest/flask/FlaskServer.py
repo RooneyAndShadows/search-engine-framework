@@ -1,5 +1,4 @@
-from typing import Optional, TypeVar, Type
-from uuid import UUID
+from typing import Type
 
 from flask import Flask, request
 
@@ -9,7 +8,6 @@ from easy_search.interfaces.crawler.server.manager.IDocumentManager import IDocu
 
 
 class FlaskServer(BaseHTTPRestServer):
-
     def __init__(self, name: str, index_type: Type[object], context: ISearchEngineContext,
                  manager: IDocumentManager) -> None:
         super().__init__(index_type, context, manager)
@@ -30,5 +28,8 @@ class FlaskServer(BaseHTTPRestServer):
                                        lambda doc_id: self.delete_document(request.headers, doc_id),
                                        methods=["DELETE"])
 
-    def run(self, host: str = '127.0.0.1', port: int = 8888, debug: bool = False) -> None:
+    def run_dev(self, host: str = '127.0.0.1', port: int = 8888, debug: bool = False) -> None:
         self._application.run(host, port, debug)
+
+    def get_wsgi_application(self):
+        return self._application
