@@ -15,7 +15,7 @@ class BaseCommunicator:
         self.crawler_id = crawler_id
         self.base_url = base_api_url
         self.http_headers = {
-            'AUTH_TOKEN': self.crawler_id.hex,
+            'AUTH-TOKEN': self.crawler_id.hex,
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }

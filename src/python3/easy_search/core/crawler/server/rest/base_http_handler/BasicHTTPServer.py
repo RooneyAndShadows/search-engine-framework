@@ -57,6 +57,7 @@ class BasicHTTPServer(BaseHTTPRestServer):
         return self.manage_response_wsgi(response, code, start_response)
 
     def application(self, environ, start_response):
+        print(environ)
         path = request_uri(environ)
         try:
             path_info = urlparse(path)
