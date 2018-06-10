@@ -1,5 +1,5 @@
-from ..client.utils.communication.http.JobCommunicator import JobCommunicator
-from easy_search.interfaces.crawler.client.utils.IJobCommunicator import IJobCommunicator
+from easy_search.core.crawler.utils.communication.http import JobCommunicator
+from easy_search.interfaces.crawler.utils.IJobCommunicator import IJobCommunicator
 
 
 def job_communicator() -> IJobCommunicator:

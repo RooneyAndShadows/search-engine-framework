@@ -1,6 +1,6 @@
-from easy_search.core.crawler.dependency.service import json_serializer
-from easy_search.interfaces.crawler.communication.response.BaseResponse import BaseResponse
-from easy_search.interfaces.crawler.index.IndexDocument import IndexDocument
+from easy_search.core.base.dependency.service import json_serializer
+from easy_search.interfaces.base.communication.response.BaseResponse import BaseResponse
+from easy_search.interfaces.server.index.communication.common.IndexDocument import IndexDocument
 
 
 class Document(IndexDocument):

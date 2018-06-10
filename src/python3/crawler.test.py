@@ -1,18 +1,17 @@
-import uuid
 from typing import Tuple, List
-from uuid import uuid4, UUID
+from uuid import UUID
 from lxml.html import document_fromstring
 
 from requests import Response
 
-from easy_search.core.crawler.client.process.Crawler import Crawler
-from easy_search.core.crawler.client.process.plugin.BaseHTTPCrawlerPlugin import BaseHTTPCrawlerPlugin
-from easy_search.core.crawler.client.utils.communication.http.DocumentCommunicator import DocumentCommunicator
-from easy_search.core.crawler.client.utils.communication.http.JobCommunicator import JobCommunicator
-from easy_search.core.crawler.dependency.service import hash_generator
-from easy_search.interfaces.crawler.communication.common.JobDescription import JobDescription
-from easy_search.interfaces.crawler.enum.JobType import JobType
-from easy_search.interfaces.crawler.index.IndexDocument import IndexDocument
+from easy_search.core.crawler.process.Crawler import Crawler
+from easy_search.core.crawler.process.plugin.BaseHTTPCrawlerPlugin import BaseHTTPCrawlerPlugin
+from easy_search.core.crawler.utils.communication.http import DocumentCommunicator
+from easy_search.core.crawler.utils.communication.http import JobCommunicator
+from easy_search.core.base.dependency.service import hash_generator
+from easy_search.interfaces.base.job.JobDescription import JobDescription
+from easy_search.interfaces.base.enum import JobType
+from easy_search.interfaces.server.index.communication.common.IndexDocument import IndexDocument
 
 
 class Property(IndexDocument):

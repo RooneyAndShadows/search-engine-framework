@@ -1,6 +1,6 @@
 from jsonpickle import handlers
 
-from easy_search.interfaces.crawler.enum.JobType import JobType
+from easy_search.interfaces.base.enum.JobType import JobType
 
 
 class JobTypeHandler(handlers.BaseHandler):
