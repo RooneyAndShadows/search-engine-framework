@@ -2,8 +2,8 @@ from typing import Dict
 
 from easy_search.core.crawler.exception.IncorrectJobDescriptionException import IncorrectJobDescriptionException
 from easy_search.core.base.dependency.service import hash_generator
-from easy_search.interfaces.crawler.process import ICrawler
-from easy_search.interfaces.crawler.process import ICrawlerPlugin
+from easy_search.interfaces.crawler.process.ICrawler import ICrawler
+from easy_search.interfaces.crawler.process.ICrawlerPlugin import ICrawlerPlugin
 from easy_search.interfaces.crawler.utils.IDocumentCommunicator import IDocumentCommunicator
 from easy_search.interfaces.crawler.utils.IJobCommunicator import IJobCommunicator
 

@@ -3,7 +3,7 @@ from typing import List, Tuple
 
 from easy_search.interfaces.base.job.ExtendedJobDescription import ExtendedJobDescription
 from easy_search.interfaces.server.index.communication.common.IndexDocument import IndexDocument
-from easy_search.interfaces.server.job.communication import JobResult
+from easy_search.interfaces.server.job.communication.request.JobResult import JobResult
 
 
 class ICrawlerPlugin(object):

@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from easy_search.interfaces.base.job.JobDescription import JobDescription
-from easy_search.interfaces.base.enum import JobType
+from easy_search.interfaces.base.enum.JobType import JobType
 
 
 class ExtendedJobDescription(JobDescription):

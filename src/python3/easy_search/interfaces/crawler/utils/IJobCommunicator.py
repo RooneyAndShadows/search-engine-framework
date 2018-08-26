@@ -3,7 +3,7 @@ from typing import List
 from uuid import UUID
 
 from easy_search.interfaces.base.job.ExtendedJobDescription import ExtendedJobDescription
-from easy_search.interfaces.server.job.communication import JobResult
+from easy_search.interfaces.server.job.communication.request.JobResult import JobResult
 
 
 class IJobCommunicator:

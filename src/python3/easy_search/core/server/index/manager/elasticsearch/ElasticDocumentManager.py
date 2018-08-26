@@ -1,4 +1,5 @@
 from elasticsearch import Elasticsearch, TransportError
+from pip._vendor import certifi
 
 from easy_search.core.base.dependency.service import json_serializer
 from easy_search.interfaces.base.exception.BasicException import BasicException
@@ -12,7 +13,7 @@ from easy_search.interfaces.server.index.manager.IDocumentManager import IDocume
 
 class ElasticDocumentManager(IDocumentManager):
     def __init__(self, server_address: str, index_name: str) -> None:
-        self.__client = Elasticsearch([server_address])
+        self.__client = Elasticsearch([server_address], ca_certs=certifi.where())
         self.__index = index_name
         self.__serializer = json_serializer()
 

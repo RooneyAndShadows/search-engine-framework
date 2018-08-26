@@ -70,6 +70,7 @@ class JobScheduler(BaseManager, IJobScheduler):
         except BasicException as e:
             self.context.rollback()
             response.set_error(Error("InternalServerError", 500, e.message))
+            print(e)
         except Exception as e:
             self.context.rollback()
             response.set_error(Error("InternalServerError", 500, e.__str__()))

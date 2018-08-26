@@ -1,6 +1,11 @@
+from uuid import uuid4
+
 from easy_search.core.base.dependency.service import json_serializer
 from easy_search.interfaces.base.communication.response.BaseResponse import BaseResponse
+from easy_search.interfaces.base.enum.JobType import JobType
+from easy_search.interfaces.base.job.JobDescription import JobDescription
 from easy_search.interfaces.server.index.communication.common.IndexDocument import IndexDocument
+from easy_search.interfaces.server.job.communication.request.JobResult import JobResult
 
 
 class Document(IndexDocument):
@@ -12,5 +17,7 @@ class Document(IndexDocument):
 
 
 serializer = json_serializer()
-print(vars(serializer.deserialize({"unique_id": 'test_id'}, Document)))
-print(serializer.serialize(BaseResponse))
+print(vars(serializer.deserialize({"job_id": '179dc51ec14949fe9d7427771ca267fb', "job_list": [
+    {"job_type": 1, "target": "123", "plugin_type": 123}
+]}, JobResult)))
+print(serializer.serialize(JobResult(uuid4(), [JobDescription(JobType.EXTRACT, '123', '123')])))

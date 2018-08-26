@@ -1,7 +1,7 @@
 import uuid
 
 from easy_search.core.server.index.manager.elasticsearch.ElasticDocumentManager import ElasticDocumentManager
-from easy_search.core.server.index.manager.solr.SOLRDocumentManager import SOLRDocumentManager
+#from easy_search.core.server.index.manager.solr.SOLRDocumentManager import SOLRDocumentManager
 from easy_search.interfaces.server.index.communication.common.IndexDocument import IndexDocument
 from easy_search.interfaces.server.index.communication.request.SearchQuery import SearchQuery
 from easy_search.interfaces.server.index.communication.request.common.RangeCriteria import RangeCriteria
@@ -16,7 +16,9 @@ class TestDocument(IndexDocument):
         self.count = count
 
 
-docs = ElasticDocumentManager('192.168.163.129:9200', 'documents')
+docs = ElasticDocumentManager(
+    'https://elastic:NJv3CP59Ks7c213pYnnvYvkk@1d9a4ef8b4c247b4b69081001a595083.eu-central-1.aws.cloud.es.io:9243',
+    'documents')
 #docs = SOLRDocumentManager('http://192.168.163.129:8983/solr', 'test')
 docs.index_object_type = TestDocument
 

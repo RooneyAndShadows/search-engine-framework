@@ -1,15 +1,10 @@
 import importlib
 import inspect
-from enum import EnumMeta
-from typing import Type, GenericMeta
+from enum import EnumMeta, Enum
+from typing import Type
 from uuid import UUID
 
 import jsonpickle
-from jsonpickle import handlers
-
-from easy_search.core.crawler.serialize.UUIDHandler import UUIDHandler
-from easy_search.core.crawler.serialize.JobTypeHandler import JobTypeHandler
-from easy_search.interfaces.base.enum.JobType import JobType
 from easy_search.interfaces.base.utils.IJsonSerializer import IJsonSerializer
 
 
@@ -40,7 +35,7 @@ class PickleJsonSerializer(IJsonSerializer):
                 source[key] = annotation(source[key])
             elif isinstance(source[key], dict):
                 source[key] = self.deserialize(source[key], annotation)
-            elif isinstance(source[key], list) and isinstance(annotation, GenericMeta):
+            elif isinstance(source[key], list):
                 source[key] = self.deserialize_list(source[key], list(annotation.__args__).pop())
             construct_params[key] = source[key]
         constructor = getattr(importlib.import_module(destination_type.__module__), destination_type.__name__)
@@ -50,10 +45,33 @@ class PickleJsonSerializer(IJsonSerializer):
                 setattr(obj, attr, source[attr])
         return obj
 
+    def serialize_list(self, source:list) -> list:
+        list_array = []
+        for element in source:
+            if isinstance(element, object) and hasattr(element, '__dict__'):
+                list_array.append(self.serialize_prepare(element))
+            else:
+                list_array.append(element)
+        return list_array
+
+    def serialize_prepare(self, source: object) -> dict:
+        required_args = source.__dict__
+        ddict = {}
+        for key, value in required_args.items():
+            if key[0] == '_' or callable(value):
+                continue
+            if isinstance(value, UUID):
+                value = value.hex
+            elif isinstance(value, Enum):
+                value = value.value
+            elif isinstance(value, list):
+                value = self.serialize_list(value)
+            elif isinstance(value, object) and hasattr(value, '__dict__'):
+                value = self.serialize_prepare(value)
+            ddict[key] = value
+        return ddict
+
     def serialize(self, source: object) -> str:
-        handlers.register(JobType, JobTypeHandler)
-        handlers.register(UUID, UUIDHandler)
-        response = jsonpickle.encode(source, False, False)
-        handlers.unregister(JobType)
-        handlers.unregister(UUID)
+        ddict = self.serialize_prepare(source)
+        response = jsonpickle.encode(ddict, False, False)
         return response

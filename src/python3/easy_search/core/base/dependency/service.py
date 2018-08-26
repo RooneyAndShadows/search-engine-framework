@@ -1,5 +1,5 @@
 from easy_search.core.base.utils.PickleJsonSerializer import PickleJsonSerializer
-from easy_search.core.base.utils import Sha256HashGenerator
+from easy_search.core.base.utils.Sha256HashGenerator import Sha256HashGenerator
 from easy_search.interfaces.base.utils.IHashGenerator import IHashGenerator
 from easy_search.interfaces.base.utils.IJsonSerializer import IJsonSerializer
 

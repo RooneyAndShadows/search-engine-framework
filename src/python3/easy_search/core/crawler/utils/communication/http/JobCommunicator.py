@@ -2,12 +2,13 @@ import urllib.parse
 from typing import List
 from uuid import UUID
 
+from easy_search.interfaces.base.enum.JobType import JobType
 from easy_search.interfaces.base.job.ExtendedJobDescription import ExtendedJobDescription
+from easy_search.interfaces.server.job.communication.request.JobResult import JobResult
 from .....server.rest.BaseHTTPRestServer import BaseHTTPRestServer
 from ..exception.FailedRequestException import FailedRequestException
 from .BaseCommunicator import BaseCommunicator
 from easy_search.interfaces.crawler.utils.IJobCommunicator import IJobCommunicator
-from easy_search.interfaces.server.job.communication import JobResult
 import requests
 
 from easy_search.interfaces.base.enum import JobType
@@ -38,8 +39,10 @@ class JobCommunicator(IJobCommunicator, BaseCommunicator):
             raise FailedRequestException('Response should contain target, but it does not!')
         if 'plugin_type' not in job_desc_json:
             raise FailedRequestException('Response should contain plugin_type, but it does not!')
-        job_desc = ExtendedJobDescription(job_desc_json["job_id"], JobType(job_desc_json['job_type']),
-                                          job_desc_json['target'], job_desc_json['plugin_type'])
+        job_desc = ExtendedJobDescription(job_desc_json["job_id"],
+                                          JobType.JobType(job_desc_json['job_type']),
+                                          job_desc_json['target'],
+                                          job_desc_json['plugin_type'])
         return job_desc
 
     def finish_job(self, result: JobResult) -> None:

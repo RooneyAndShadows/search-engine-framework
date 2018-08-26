@@ -9,10 +9,10 @@ from easy_search.interfaces.base.job.ExtendedJobDescription import ExtendedJobDe
 from easy_search.interfaces.base.enum import JobType
 from easy_search.core.crawler.exception.IncorrectJobDescriptionException import IncorrectJobDescriptionException
 from easy_search.core.base.dependency.service import hash_generator
-from easy_search.interfaces.crawler.process import ICrawlerPlugin
+from easy_search.interfaces.crawler.process.ICrawlerPlugin import ICrawlerPlugin
 from easy_search.interfaces.base.job.JobDescription import JobDescription
-from easy_search.interfaces.server.job.communication import JobResult
 from easy_search.interfaces.server.index.communication.common.IndexDocument import IndexDocument
+from easy_search.interfaces.server.job.communication.request.JobResult import JobResult
 
 
 class BaseHTTPCrawlerPlugin(ICrawlerPlugin):
