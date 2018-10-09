@@ -14,6 +14,8 @@ from easy_search.interfaces.server.index.manager.IDocumentManager import IDocume
 
 class SOLRDocumentManager(IDocumentManager):
 
+
+
     def __init__(self, server_address: str, index_name: str) -> None:
         self.client = SolrClient(server_address)
         self.index = index_name
@@ -71,16 +73,13 @@ class SOLRDocumentManager(IDocumentManager):
             "defType": "edismax",
             "qf": solr_field_query
         }
-        result = SearchResult(False)
+        result = SearchResult(0, False)
         try:
             response = self.client.query_raw(self.index, data)
-            result = SearchResult(True)
+            result = SearchResult(response['response']['numFound'], True)
             for document in response['response']['docs']:
                 result.add_result(self._serializer.deserialize(document, self.index_object_type))
         except Exception as e:
             result.set_error(Error("InternalServerError", 500, 'Unknown error occurred!'))
         return result
-
-
-
 

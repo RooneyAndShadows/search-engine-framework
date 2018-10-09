@@ -1,4 +1,6 @@
+import elasticsearch
 from elasticsearch import Elasticsearch, TransportError
+from elasticsearch.helpers import scan
 from pip._vendor import certifi
 
 from easy_search.core.base.dependency.service import json_serializer
@@ -51,7 +53,7 @@ class ElasticDocumentManager(IDocumentManager):
             response.set_error(Error("InternalServerError", 500, 'Unknown error occurred!'))
         return response
 
-    def search(self, query: SearchQuery) -> SearchResult:
+    def __transform_query(self, query: SearchQuery):
         elastic_query = []
         elastic_range_query = []
         for criteria in query.searchCriteria:
@@ -73,23 +75,29 @@ class ElasticDocumentManager(IDocumentManager):
                     }
                 }
             })
-        data = {
-            "query": {
+        data = {}
+        if len(elastic_query) + len(elastic_range_query) == 0:
+            data['query'] = {"match_all": {}}
+        else:
+            data['query'] = {
                 "bool": {
                     "should": elastic_query,
                     "must": elastic_range_query
                 }
-            },
-            "from":  query.page * query.items,
-            "size": query.items
-        }
-        result = SearchResult(False)
+            }
+        data['from'] = query.page * query.items
+        data['size'] = query.items
+        return data
+
+    def search(self, query: SearchQuery) -> SearchResult:
+        data = self.__transform_query(query)
+        result = SearchResult(0, False)
         try:
             response = self.__client.search(self.__index, 'index', data)
             if 'hits' not in response:
                 result.set_error(Error("InternalServerError", 500, 'Index did not return proper response!'))
             else:
-                result = SearchResult(True)
+                result = SearchResult(response['hits']['total'], True)
                 for hit in response['hits']['hits']:
                     result.add_result(self.__serializer.deserialize(hit['_source'], self.index_object_type))
         except Exception as e:

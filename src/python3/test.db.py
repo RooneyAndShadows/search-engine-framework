@@ -7,7 +7,7 @@ from easy_search.interfaces.base.enum.JobType import JobType
 from easy_search.interfaces.server.job.data.data.JobData import JobData
 
 #with SQLAlchemyContext("postgresql+psycopg2://postgres:_mk123_@localhost:5432/crawler_test") as context:
-with MongoContext("mongodb+srv://administrator:admin@easyserachdemo-edqtm.mongodb.net/test?retryWrites=true",
+with MongoContext('mongodb+srv://operator:Zsq477fBvczcAsmW@authorization-mvw6i.gcp.mongodb.net/test?retryWrites=true',
                   "carstorage") as context:
     c_id = UUID("5a84baf2-8ea8-4481-8809-027589255f81")
     has = context.crawler_set().exists(c_id)

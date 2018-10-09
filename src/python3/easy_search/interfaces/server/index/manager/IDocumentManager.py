@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Type
+from typing import Type, Iterator
 
 from easy_search.interfaces.base.communication.response.BaseResponse import BaseResponse
 from easy_search.interfaces.server.index.communication.common import IndexDocument
