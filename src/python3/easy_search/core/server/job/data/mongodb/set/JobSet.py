@@ -23,7 +23,8 @@ class JobSet(BaseSet, IJobSet):
 
     def convert(self, entity) -> JobDTO:
         job = JobDTO(entity["job_id"], JobType(entity["type"]), entity["url"], entity["hash"], entity["locked"],
-                     entity["date_added"], entity["crawler_id"], entity["plugin_type"])
+                     entity["date_added"], entity["crawler_id"], entity["plugin_type"], entity["repeat"],
+                     entity["repeat_after"])
         if entity["done_by"] is not None:
             job.set_executor_crawler_id(entity["done_by"], entity["date_done"])
         return job
@@ -37,6 +38,8 @@ class JobSet(BaseSet, IJobSet):
         job["hash"] = hash_generator().generate_target_hash(data.target)
         job["url"] = data.target
         job["type"] = data.type.value
+        job["repeat"] = data.repeat
+        job["repeat_after"] = data.repeat_after
 
     def add(self, job: JobData) -> UUID:
         try:
@@ -91,8 +94,15 @@ class JobSet(BaseSet, IJobSet):
 
     def get_next_free(self) -> JobDTO:
         try:
-            entity = self.get_collection().find_one_and_update({"locked": False}, {"$set": {"locked": True}},
+            entity = self.get_collection().find_one_and_update({"locked": False, 'date_done': None},
+                                                               {"$set": {"locked": True}},
                                                                sort=[("date_added", pymongo.ASCENDING)])
+            if entity is None:
+                entity = self.get_collection().find_one_and_update(
+                    {"locked": False,
+                     'date_done': {"$not": None}, 'repeat_after': {"$gte": datetime.now()}},
+                    {"$set": {"locked": True}},
+                    sort=[("repeat_after", pymongo.ASCENDING)])
         except Exception as e:
             raise DataAccessException("Failed get job from database!", e)
         if entity is None:
@@ -104,12 +114,20 @@ class JobSet(BaseSet, IJobSet):
 
     def get_next_free_in_plugin_list(self, plugin_list: List[str]) -> Job:
         try:
-            entity = self.get_collection().find_one_and_update({"locked": False, "plugin_type": {"$in": plugin_list}},
+            entity = self.get_collection().find_one_and_update({"locked": False, "plugin_type": {"$in": plugin_list},
+                                                                'date_done': None},
                                                                {"$set": {"locked": True}},
                                                                sort=[("date_added", pymongo.ASCENDING)])
+            if entity is None:
+                entity = self.get_collection().find_one_and_update(
+                    {"locked": False, "plugin_type": {"$in": plugin_list},
+                     'date_done': {"$ne": None}, 'repeat_after': {"$lt": datetime.now()}},
+                    {"$set": {"locked": True}},
+                    sort=[("repeat_after", pymongo.ASCENDING)])
         except Exception as e:
             raise DataAccessException("Failed get job from database!", e)
         if entity is None:
+
             raise EntityNotFoundException("No free jobs found!")
         try:
             return self.convert(entity)

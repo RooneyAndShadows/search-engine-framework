@@ -30,6 +30,9 @@ class FlaskServer(BaseHTTPRestServer):
         self._application.add_url_rule(self.DOCUMENT_SEARCH, 'search',
                                        lambda: self.search(request.headers, request.get_json(True)),
                                        methods=["POST"])
+        self._application.add_url_rule(self.DOCUMENT_GET + '/<doc_id>', 'fetch',
+                                       lambda doc_id: self.fetch(request.headers, doc_id),
+                                       methods=["GET"])
 
     def run_dev(self, host: str = '127.0.0.1', port: int = 8888, debug: bool = False) -> None:
         self._application.run(host, port, debug)

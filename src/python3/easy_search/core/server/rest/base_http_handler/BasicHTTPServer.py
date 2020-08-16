@@ -32,10 +32,13 @@ class BasicHTTPServer(BaseHTTPRestServer):
         return [bytes(response, 'utf-8')]
 
     def do_GET(self, path: str, headers: dict, start_response):
-        if path != '/job/next':
-            response, code = "", self.NOT_FOUND
-        else:
+        if path == self.JOB_FETCH_PATH:
             response, code = self.get_next_free(headers)
+        elif path == self.DOCUMENT_GET:
+            output = re.search(self.DOCUMENT_GET + '/(.*)', path)
+            response, code = self.fetch(headers, output.group(1))
+        else:
+            response, code = "", self.NOT_FOUND
         return self.manage_response_wsgi(response, code, start_response)
 
     def do_POST(self, path: str, raw_request: str, headers: dict, start_response):

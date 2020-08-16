@@ -19,11 +19,13 @@ class PyramidServer(BaseHTTPRestServer):
             config.add_route('next_job', self.JOB_FETCH_PATH)
             config.add_route('add_document', self.DOCUMENT_ADD)
             config.add_route('delete_document', self.DOCUMENT_DELETE + '/{id}')
+            config.add_route('fetch_document', self.DOCUMENT_GET + '/{id}')
             config.add_route('search', self.DOCUMENT_SEARCH)
             config.add_view(self.register_job_wrapper, route_name='register_job')
             config.add_view(self.get_next_free_wrapper, route_name='next_job')
             config.add_view(self.add_document_wrapper, route_name='add_document')
             config.add_view(self.delete_document_wrapper, route_name='delete_document')
+            config.add_view(self.fetch_document_wrapper, route_name='fetch_document')
             config.add_view(self.search_wrapper, route_name='search')
             self._application = config.make_wsgi_app()
         self._server = None
@@ -61,6 +63,13 @@ class PyramidServer(BaseHTTPRestServer):
     )
     def delete_document_wrapper(self, request: Request):
         response, code = self.delete_document(request.headers, request.matchdict['id'])
+        return Response(response, code)
+
+    @view_config(
+        request_method='GET'
+    )
+    def fetch_document_wrapper(self, request: Request):
+        response, code = self.fetch(request.headers, request.matchdict['id'])
         return Response(response, code)
 
     def run_dev(self, host: str = '127.0.0.1', port: int = 8888, debug: bool = False) -> None:

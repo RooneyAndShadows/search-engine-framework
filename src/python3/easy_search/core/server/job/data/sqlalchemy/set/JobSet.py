@@ -3,6 +3,7 @@ import uuid
 from typing import List
 from uuid import UUID
 
+from easy_search.interfaces.base.enum.JobType import JobType
 from sqlalchemy import asc, and_
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
@@ -21,7 +22,7 @@ class JobSet(BaseSet, IJobSet):
 
     def convert(self, entity: Job) -> JobDTO:
         job = JobDTO(entity.id, JobType(entity.type), entity.url, entity.hash, entity.locked,
-                     entity.date_added, entity.crawler_id, entity.plugin)
+                     entity.date_added, entity.crawler_id, entity.plugin, entity.repeat, entity.repeat_after)
         if entity.done_by is not None:
             job.set_executor_crawler_id(entity.done_by, entity.date_done)
         return job
@@ -35,6 +36,8 @@ class JobSet(BaseSet, IJobSet):
         job.url = data.target
         job.plugin = data.plugin_type
         job.type = data.type.value
+        job.repeat = data.repeat
+        job.repeat_after = data.repeat_after
 
     def add(self, job: JobData) -> UUID:
         try:
@@ -112,6 +115,7 @@ class JobSet(BaseSet, IJobSet):
             entity = query \
                 .order_by(asc(Job.date_added)) \
                 .filter(Job.locked == False) \
+                .filter(Job.date_done == None) \
                 .first()
             return self.convert(entity)
         except NoResultFound as e:
@@ -124,6 +128,7 @@ class JobSet(BaseSet, IJobSet):
             query = self.session.query(Job)
             entity = query \
                 .order_by(asc(Job.date_added)) \
+                .filter(Job.date_done == None) \
                 .filter(and_(Job.locked == False, Job.plugin in plugin_list)) \
                 .first()
             return self.convert(entity)

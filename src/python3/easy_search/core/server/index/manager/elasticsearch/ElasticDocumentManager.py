@@ -30,7 +30,6 @@ class ElasticDocumentManager(IDocumentManager):
         except BasicException as e:
             response.set_error(Error("InternalServerError", 500, e.message))
         except Exception as e:
-            print(e)
             response.set_error(Error("InternalServerError", 500, 'Unknown error occurred!'))
         return response
 
@@ -52,6 +51,9 @@ class ElasticDocumentManager(IDocumentManager):
             print(e)
             response.set_error(Error("InternalServerError", 500, 'Unknown error occurred!'))
         return response
+
+    def get(self, unique_id: str) -> DocumentResponse:
+        pass
 
     def __transform_query(self, query: SearchQuery):
         elastic_query = []

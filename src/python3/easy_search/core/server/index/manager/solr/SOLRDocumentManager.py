@@ -8,14 +8,12 @@ from easy_search.interfaces.base.communication.response.BaseResponse import Base
 from easy_search.interfaces.base.communication.response.Error import Error
 from easy_search.interfaces.server.index.communication.common.IndexDocument import IndexDocument
 from easy_search.interfaces.server.index.communication.request.SearchQuery import SearchQuery
+from easy_search.interfaces.server.index.communication.response import DocumentResponse
 from easy_search.interfaces.server.index.communication.response.SearchResult import SearchResult
 from easy_search.interfaces.server.index.manager.IDocumentManager import IDocumentManager
 
 
 class SOLRDocumentManager(IDocumentManager):
-
-
-
     def __init__(self, server_address: str, index_name: str) -> None:
         self.client = SolrClient(server_address)
         self.index = index_name
@@ -51,6 +49,9 @@ class SOLRDocumentManager(IDocumentManager):
             print(e)
             response.set_error(Error("InternalServerError", 500, 'Unknown error occurred!'))
         return response
+
+    def get(self, unique_id: str) -> DocumentResponse:
+        pass
 
     def search(self, query: SearchQuery) -> SearchResult:
         solr_query = ""

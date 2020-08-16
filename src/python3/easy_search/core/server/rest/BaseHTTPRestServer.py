@@ -20,6 +20,7 @@ class BaseHTTPRestServer(BaseServer, IRestServer):
     DOCUMENT_ADD = "/index/add"
     DOCUMENT_DELETE = "/index/remove"
     DOCUMENT_SEARCH = "/index/search"
+    DOCUMENT_GET = "/index/fetch"
 
     FORBIDDEN = 403
     BAD_REQUEST = 400
@@ -92,4 +93,11 @@ class BaseHTTPRestServer(BaseServer, IRestServer):
             return "Token not provided!", self.FORBIDDEN
         query = self.serializer.deserialize(request, SearchQuery)
         response = self.documents.search(query)
+        return self.manage_response(response)
+
+    def fetch(self, headers: dict, doc_id: str):
+        crawler_id = self.authenticate(headers)
+        if crawler_id is None:
+            return "Token not provided!", self.FORBIDDEN
+        response = self.documents.get(doc_id)
         return self.manage_response(response)

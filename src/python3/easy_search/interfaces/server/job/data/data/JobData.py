@@ -5,7 +5,10 @@ from easy_search.interfaces.base.enum.JobType import JobType
 
 
 class JobData(object):
-    def __init__(self, job_type: JobType, target: str, locked: bool, creator_crawler_id: UUID, plugin: str) -> None:
+    def __init__(self, job_type: JobType, target: str, locked: bool, creator_crawler_id: UUID, plugin: str,
+                 repeat: int = None, repeat_after: datetime = None) -> None:
+        self.repeat_after = repeat_after
+        self.repeat = repeat
         self.type = job_type
         self.target = target
         self.locked = locked

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from uuid import UUID
 
 from easy_search.interfaces.server.job.data.ISearchEngineContext import ISearchEngineContext
@@ -13,8 +13,11 @@ class Repository(IRepository):
 
     def finish_job(self, job_id: UUID, crawler_id: UUID) -> None:
         job = self.context.job_set().get(job_id)
-        data = JobData(job.type, job.target, job.locked, job.creator_id, job.plugin_type)
+        data = JobData(job.type, job.target, job.locked, job.creator_id, job.plugin_type, job.repeat)
         data.set_executor_crawler_id(crawler_id, datetime.now())
+        data.locked = False
+        if data.repeat is not None:
+            data.repeat_after = data.date_executed + timedelta(seconds=data.repeat)
         self.context.job_set().edit(job_id, data)
 
 
