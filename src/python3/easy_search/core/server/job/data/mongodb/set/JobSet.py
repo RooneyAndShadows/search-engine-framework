@@ -94,7 +94,7 @@ class JobSet(BaseSet, IJobSet):
 
     def get_next_free(self) -> JobDTO:
         try:
-            entity = self.get_collection().find_one_and_update({"locked": False, 'date_done': None},
+            entity = self.get_collection().find_one_and_update({"locked": False},
                                                                {"$set": {"locked": True}},
                                                                sort=[("date_added", pymongo.ASCENDING)])
             if entity is None:
@@ -114,8 +114,7 @@ class JobSet(BaseSet, IJobSet):
 
     def get_next_free_in_plugin_list(self, plugin_list: List[str]) -> Job:
         try:
-            entity = self.get_collection().find_one_and_update({"locked": False, "plugin_type": {"$in": plugin_list},
-                                                                'date_done': None},
+            entity = self.get_collection().find_one_and_update({"locked": False, "plugin_type": {"$in": plugin_list}},
                                                                {"$set": {"locked": True}},
                                                                sort=[("date_added", pymongo.ASCENDING)])
             if entity is None:
