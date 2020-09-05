@@ -98,7 +98,7 @@ class JobSet(BaseSet, IJobSet):
                                                                {"$set": {"locked": True}},
                                                                sort=[("date_added", pymongo.ASCENDING)])
             if entity is None:
-                self.get_collection().find_one_and_update(
+                entity = self.get_collection().find_one_and_update(
                     {"locked": False,
                      'date_done': {"$ne": None}, 'repeat_after': {"$gte": datetime.now()}},
                     {"$set": {"locked": True}},
@@ -119,7 +119,7 @@ class JobSet(BaseSet, IJobSet):
                                                                {"$set": {"locked": True}},
                                                                sort=[("date_added", pymongo.ASCENDING)])
             if entity is None:
-                self.get_collection().find_one_and_update(
+                entity = self.get_collection().find_one_and_update(
                     {"locked": False,
                      'date_done': {"$ne": None}, 'repeat_after': {"$gte": datetime.now()}},
                     {"$set": {"locked": True}},
