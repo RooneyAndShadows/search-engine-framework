@@ -98,10 +98,10 @@ class JobSet(BaseSet, IJobSet):
                                                                {"$set": {"locked": True}},
                                                                sort=[("date_added", pymongo.ASCENDING)])
             if entity is None:
-                entity = self.get_collection().find_one_and_update(
+                self.get_collection().find_one_and_update(
                     {"locked": True,
                      'date_done': {"$not": None}, 'repeat_after': {"$gte": datetime.now()}},
-                    {"$set": {"locked": True}},
+                    {"$set": {"locked": False}},
                     sort=[("repeat_after", pymongo.ASCENDING)])
         except Exception as e:
             raise DataAccessException("Failed get job from database!", e)
@@ -119,10 +119,10 @@ class JobSet(BaseSet, IJobSet):
                                                                {"$set": {"locked": True}},
                                                                sort=[("date_added", pymongo.ASCENDING)])
             if entity is None:
-                entity = self.get_collection().find_one_and_update(
-                    {"locked": True, "plugin_type": {"$in": plugin_list},
-                     'date_done': {"$ne": None}, 'repeat_after': {"$lt": datetime.now()}},
-                    {"$set": {"locked": True}},
+                self.get_collection().find_one_and_update(
+                    {"locked": True,
+                     'date_done': {"$not": None}, 'repeat_after': {"$gte": datetime.now()}},
+                    {"$set": {"locked": False}},
                     sort=[("repeat_after", pymongo.ASCENDING)])
         except Exception as e:
             raise DataAccessException("Failed get job from database!", e)
