@@ -1,3 +1,5 @@
+from setuptools import setup
+
 setup(name='easy_search',
       version='1.0',
       description='Simple search engine framework',
@@ -5,5 +7,5 @@ setup(name='easy_search',
       author_email='krlazarov93@gmail.com',
       url='https://github.com/ShadowSteps/search-engine-framework',
       packages=['easy_search'],
-      package_dir = {'': 'python3'}
+      package_dir = {'': 'src/python3'}
      )
