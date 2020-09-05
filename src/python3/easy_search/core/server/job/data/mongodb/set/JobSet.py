@@ -100,7 +100,7 @@ class JobSet(BaseSet, IJobSet):
             if entity is None:
                 self.get_collection().find_one_and_update(
                     {"locked": False,
-                     'date_done': {"$not": None}, 'repeat_after': {"$gte": datetime.now()}},
+                     'date_done': {"$ne": None}, 'repeat_after': {"$gte": datetime.now()}},
                     {"$set": {"locked": True}},
                     sort=[("repeat_after", pymongo.ASCENDING)])
         except Exception as e:
@@ -121,7 +121,7 @@ class JobSet(BaseSet, IJobSet):
             if entity is None:
                 self.get_collection().find_one_and_update(
                     {"locked": False,
-                     'date_done': {"$not": None}, 'repeat_after': {"$gte": datetime.now()}},
+                     'date_done': {"$ne": None}, 'repeat_after': {"$gte": datetime.now()}},
                     {"$set": {"locked": True}},
                     sort=[("repeat_after", pymongo.ASCENDING)])
         except Exception as e:
